@@ -8,6 +8,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.7",
+    "@apollo/react-common": "^3.1.4",
     "@expo/vector-icons": "^12.0.3",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.10",
@@ -18,6 +20,8 @@
     "apollo-boost": "^0.4.9",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-cache-persist": "^0.1.1",
+    "apollo-client": "^2.6.10",
+    "apollo3-cache-persist": "^0.9.1",
     "boost": "^0.63.1",
     "expo": "^40.0.0",
     "expo-app-loading": "^1.0.1",
@@ -25,7 +29,10 @@
     "expo-font": "~8.4.0",
     "expo-status-bar": "~1.0.3",
     "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
+    "prop-types": "^15.7.2",
     "react": "16.13.1",
+    "react-apollo": "^3.1.5",
     "react-apollo-hooks": "^0.5.0",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",

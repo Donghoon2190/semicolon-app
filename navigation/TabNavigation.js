@@ -20,13 +20,13 @@ const stackFactory = (initialRoute, customConfig) =>
 export default createBottomTabNavigator({
     Home: {
         screen: stackFactory(Home, {
-            title: "Home",
-            headerRight: <MessagesLink />
+            title: "Home  ٩(๑•̀o•́๑)و",
+            headerRight: <MessagesLink />,
         })
     },
     Search: {
         screen: stackFactory(Search, {
-            title: "Search"
+            title: "Search  ٩(๑•̀o•́๑)و"
         })
     },
     Add: {
@@ -37,12 +37,12 @@ export default createBottomTabNavigator({
     },
     Notifications: {
         screen: stackFactory(Notifications, {
-            title: "Notifications"
+            title: "Notifications  ٩(๑•̀o•́๑)و"
         })
     },
     Profile: {
         screen: stackFactory(Profile, {
-            title: "Profile"
+            title: "Profile  ٩(๑•̀o•́๑)و"
         })
     }
 });
