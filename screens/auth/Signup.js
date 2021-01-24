@@ -84,7 +84,6 @@ export default ({ navigation }) => {
         const { email, first_name, last_name } = await response.json();
         updateFormData(email, first_name, last_name)
         setLoading(false);
-
       } else {
       }
     } catch ({ message }) {
