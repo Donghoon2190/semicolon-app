@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Image, Platform } from "react-native";
-import styled from "styled-components";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import styled from "styled-components/native";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import Swiper from "react-native-swiper";
 import { gql } from "apollo-boost";
 import constants from "../constants";
 import styles from "../styles";
 import { useMutation } from "react-apollo-hooks";
-import { FontAwesome } from '@expo/vector-icons';
+import { withNavigation } from "react-navigation";
+
 export const TOGGLE_LIKE = gql`
   mutation toggelLike($postId: String!) {
     toggleLike(postId: $postId)
@@ -16,7 +17,7 @@ export const TOGGLE_LIKE = gql`
 `;
 
 const Container = styled.View`
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 `;
 const Header = styled.View`
   padding: 15px;
@@ -36,7 +37,7 @@ const Location = styled.Text`
 const IconsContainer = styled.View`
   flex-direction: row;
   margin-bottom: 5px;
-    margin-top : -55px;
+  margin-top : -55px;
 `;
 const IconContainer = styled.View`
   margin-right: 10px;
@@ -60,11 +61,12 @@ const Post = ({
     likeCount: likeCountProp,
     caption,
     comments = [],
-    isLiked: isLikedProp
+    isLiked: isLikedProp,
+    navigation
 }) => {
     const [isLiked, setIsLiked] = useState(isLikedProp);
     const [likeCount, setLikeCount] = useState(likeCountProp);
-    const { toggleLikeMutaton } = useMutation(TOGGLE_LIKE, {
+    const [toggleLikeMutaton] = useMutation(TOGGLE_LIKE, {
         variables: {
             postId: id
         }
@@ -83,22 +85,24 @@ const Post = ({
     return (
         <Container>
             <Header>
-                <Touchable>
+                <Touchable onPress={() => (
+                    navigation.navigate("UserDetail", { username: user.username })
+                )}>
                     <Image
                         style={{ height: 40, width: 40, borderRadius: 20 }}
                         source={{ uri: user.avatar }}
                     />
                 </Touchable>
-                <Touchable>
+                <Touchable onPress={() => (
+                    navigation.navigate("UserDetail", { username: user.username })
+                )}>
                     <HeaderUserContainer>
                         <Bold>{user.username}</Bold>
                         <Location>{location}</Location>
                     </HeaderUserContainer>
                 </Touchable>
             </Header>
-            <Swiper
-                style={{ height: constants.height / 2.1 }}
-            >
+            <Swiper style={{ height: constants.height / 2.1 }}>
                 {files.map(file => (
                     <Image
                         style={{ width: constants.width, height: constants.height / 2.5 }}
@@ -112,19 +116,32 @@ const Post = ({
                     <Touchable onPress={handleLike}>
                         <IconContainer>
                             <AntDesign
-                                name={isLiked ? "star" : "staro"} color={isLiked ? styles.starColor : styles.blackColor} size={26} />
+                                size={24}
+                                color={isLiked ? styles.starColor : styles.blackColor}
+                                name={
+                                    Platform.OS === "ios"
+                                        ? isLiked
+                                            ? "star"
+                                            : "staro"
+                                        : isLiked
+                                            ? "star"
+                                            : "staro"
+                                }
+                            />
                         </IconContainer>
                     </Touchable>
                     <Touchable>
                         <IconContainer>
-                            <IconContainer>
-                                <FontAwesome name="comment-o" size={24} color={styles.blackColor} />
-                            </IconContainer>
+                            <FontAwesome
+                                color={styles.blackColor}
+                                size={24}
+                                name={Platform.OS === "ios" ? "comment-o" : "comment-o"}
+                            />
                         </IconContainer>
                     </Touchable>
                 </IconsContainer>
                 <Touchable>
-                    <Bold>{likeCount <= 1 ? `${likeCount} like` : `${likeCount} likes`}</Bold>
+                    <Bold>{likeCount === 1 ? "1 like" : `${likeCount} likes`}</Bold>
                 </Touchable>
                 <Caption>
                     <Bold>{user.username}</Bold> {caption}
@@ -167,4 +184,4 @@ Post.propTypes = {
     createdAt: PropTypes.string.isRequired
 };
 
-export default Post;
+export default withNavigation(Post);

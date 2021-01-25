@@ -16,6 +16,7 @@ export default {
     starColor: "#F2CE5A",
     boxBorder: "1px solid #E6E6E6",
     borderRadius: "4px",
+    searchColor: "#E4E7EC",
     whiteBox: `border-radius:${BORDER_RADIUS};
                border:${BOX_BORDER};
                background-color:white;

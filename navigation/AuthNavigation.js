@@ -8,8 +8,8 @@ const AuthNavigation = createStackNavigator(
     {
         AuthHome,
         Login,
-        Confirm,
         Signup,
+        Confirm,
     },
     {
         headerMode: "none"

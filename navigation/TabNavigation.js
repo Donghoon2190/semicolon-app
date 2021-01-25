@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import React from "react";
 import Home from "../screens/tabs/Home";
-import Search from "../screens/tabs/Search";
+import Search from "../screens/tabs/Search/index";
 import Notifications from "../screens/tabs/Notifications";
 import MessagesLink from "../components/MessagesLink";
 import Profile from "../screens/tabs/Profile";
@@ -13,18 +13,40 @@ import { AntDesign } from '@expo/vector-icons';
 import styled from "styled-components/native";
 import constants from "../constants";
 import styles from "../styles";
+import Detail from "../screens/Detail";
+import UserDetail from "../screens/UserDetail";
 
 const stackFactory = (initialRoute, customConfig) =>
     createStackNavigator({
         InitialRoute: {
             screen: initialRoute,
-            navigationOptions: { ...customConfig }
+            navigationOptions: {
+                ...customConfig
+            }
+        },
+        Detail: {
+            screen: Detail,
+            navigationOptions: {
+                title: "Photo"
+            }
+        },
+        UserDetail: {
+            screen: UserDetail,
+            navigationOptions: ({ navigation }) => ({
+                headerTintColor: styles.blackColor,
+                title: navigation.getParam("username")
+            })
         }
-    });
+    },
+        {
+            defaultNavigationOptions: {
+                headerTintColor: styles.blackColor
+            }
+        });
 
 const Image = styled.Image`
   margin : -30px;
-  margin-left : 38%;
+  margin-left : -15px;
   width: ${constants.width / 3};
 `;
 
@@ -32,8 +54,8 @@ export default createBottomTabNavigator(
     {
         Home: {
             screen: stackFactory(Home, {
-                headerRight: <MessagesLink />,
-                headerTitle: <Image resizeMode={"contain"} source={require("../assets/logo.png")} />
+                headerRight: () => <MessagesLink />,
+                headerTitle: () => <Image resizeMode={"contain"} source={require("../assets/logo.png")} />
             }),
             navigationOptions: {
                 tabBarIcon: ({ focused }) => (
@@ -44,9 +66,7 @@ export default createBottomTabNavigator(
             }
         },
         Search: {
-            screen: stackFactory(Search, {
-                title: "Search"
-            }),
+            screen: stackFactory(Search),
             navigationOptions: {
                 tabBarIcon: ({ focused }) => (
                     <NavIcon
@@ -93,6 +113,7 @@ export default createBottomTabNavigator(
     },
     {
         tabBarOptions: {
+            // 밑에 메뉴 글씨 제거
             showLabel: false
         }
     }
