@@ -8,6 +8,24 @@ import { Platform } from "@unimodules/core";
 import constants from "../constants";
 import SquarePhoto from "./SquarePhoto";
 import Post from "./Post";
+import { useLogOut } from "../AuthContext";
+
+
+const Button1 = styled.View`
+  width:90px;
+  align-items: center;
+  margin-left : ${constants.width / 2.3};
+  background-color:${styles.navyColor};
+  height:30px;
+  border-radius: 15px;
+`;
+
+const Text = styled.Text`
+margin-top : 5px;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+`;
 
 const ProfileHeader = styled.View`
   padding: 20px;
@@ -60,7 +78,6 @@ const Button = styled.View`
   align-items: center;
 `;
 
-
 const UserProfile = ({
     avatar,
     postsCount,
@@ -93,12 +110,19 @@ const UserProfile = ({
                             <Bold>{followingCount}</Bold>
                             <StatName>Following</StatName>
                         </Stat>
+
                     </ProfileStats>
+
                 </HeaderColumn>
             </ProfileHeader>
             <ProfileMeta>
                 <Bold>{fullName}</Bold>
-                <Bio>{bio}</Bio>
+                <ProfileStats>
+                    <Bio>{bio}</Bio>
+                    <Button1>
+                        <TouchableOpacity onPress={useLogOut()}><Text>Log Out</Text></TouchableOpacity>
+                    </Button1>
+                </ProfileStats>
             </ProfileMeta>
             <ButtonContainer>
                 <TouchableOpacity onPress={toggleGrid}>
@@ -120,13 +144,16 @@ const UserProfile = ({
                     </Button>
                 </TouchableOpacity>
             </ButtonContainer>
-            {isGrid ? <SquareBox>{posts && posts.map(p => {
-                return (<SquarePhoto key={p.id} {...p} />)
-            })}</SquareBox> : <>
-                    {posts && posts.map(p => {
-                        return (<Post key={p.id} {...p} />)
-                    })}</>}
-        </View>
+            {
+                isGrid ? <SquareBox>{posts && posts.map(p => {
+                    return (<SquarePhoto key={p.id} {...p} />)
+                })}</SquareBox> : <>
+                        {posts && posts.map(p => {
+                            return (<Post key={p.id} {...p} />)
+                        })}
+                    </>
+            }
+        </View >
     );
 };
 
@@ -137,7 +164,7 @@ UserProfile.propTypes = {
     fullName: PropTypes.string.isRequired,
     isFollowing: PropTypes.bool.isRequired,
     isSelf: PropTypes.bool.isRequired,
-    bio: PropTypes.string.isRequired,
+    bio: PropTypes.string,
     followingCount: PropTypes.number.isRequired,
     followersCount: PropTypes.number.isRequired,
     postsCount: PropTypes.number.isRequired,

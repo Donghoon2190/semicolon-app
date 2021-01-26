@@ -13,8 +13,6 @@ const SquarePhoto = ({ navigation, files = [], id }) => (
             style={{ width: (constants.width - 20) / 3, height: (constants.height - 20) / 6, marginLeft: 5, marginTop: 5 }}
         />
     </TouchableOpacity>
-
-
 );
 
 SquarePhoto.propTypes = {
