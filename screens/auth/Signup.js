@@ -104,7 +104,6 @@ export default ({ navigation }) => {
         });
         const { email, family_name, given_name } = await user.json();
         updateFormData(email, given_name, family_name)
-        console.log(data);
       } else {
         return { cancelled: true };
       }

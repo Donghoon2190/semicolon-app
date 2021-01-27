@@ -79,7 +79,7 @@ export default ({ navigation }) => {
       setIsLoading(true)
       const {
         data: { location }
-      } = await axios.post("http://192.168.219.105:4040/api/upload", formData, {
+      } = await axios.post("https://teamsemicolon-backend.herokuapp.com/api/upload", formData, {
         headers: {
           "content-type": "multipart/form-data"
         }

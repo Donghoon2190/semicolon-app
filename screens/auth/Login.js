@@ -31,7 +31,6 @@ export default ({ navigation }) => {
     try {
       setLoading(true);
       const { data: { requestSecret } } = await requestSecretMutation();
-      //console.log(data)
       if (requestSecret) {
         Alert.alert("Check your Email now!  ╰(*°▽°*)╯");
         navigation.navigate("Confirm", { email: value });

@@ -50,7 +50,6 @@ export default ({ navigation }) => {
     try {
       const { assets } = await MediaLibrary.getAssetsAsync();
       const [firstPhoto] = assets;
-      console.log(firstPhoto)
       setSelected(firstPhoto);
       setAllPhotos(assets);
       navigation.navigate("Tabs", { photo: firstPhoto });

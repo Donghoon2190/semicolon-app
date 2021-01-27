@@ -128,7 +128,7 @@ const UserProfile = ({
                 <TouchableOpacity onPress={toggleGrid}>
                     <Button>
                         <Ionicons
-                            color={isGrid ? styles.black : styles.darkGreyColor}
+                            color={isGrid ? styles.blackColor : styles.darkGreyColor}
                             size={32}
                             name={Platform.OS === "ios" ? "ios-grid" : "md-grid"}
                         />
