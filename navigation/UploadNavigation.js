@@ -2,10 +2,10 @@ import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import React from "react";
 import { createStackNavigator } from 'react-navigation-stack';
 import SelectPhoto from "../screens/photo/SelectPhoto";
-import TakePhoto from "../screens/photo/TakePhoto";
-import UploadPhoto from "../screens/photo/UploadPhoto";
 import styles from '../styles';
 import UploadLink from '../components/UploadLink';
+import UploadProfile from '../screens/photo/UploadProfile';
+import TakeUpload from '../screens/photo/TakeUpload';
 
 const PhotoTabs = createMaterialTopTabNavigator(
     {
@@ -16,7 +16,7 @@ const PhotoTabs = createMaterialTopTabNavigator(
             }
         },
         Take: {
-            screen: TakePhoto,
+            screen: TakeUpload,
             navigationOptions: {
                 tabBarLabel: "Take"
             }
@@ -26,6 +26,7 @@ const PhotoTabs = createMaterialTopTabNavigator(
     {
         tabBarPosition: "bottom",
         tabBarOptions: {
+
             indicatorStyle: {
                 backgroundColor: styles.navyColor,
                 marginBottom: 48
@@ -48,12 +49,12 @@ export default createStackNavigator({
             headerRight: <UploadLink />
         }
     },
-    Upload: {
-        screen: UploadPhoto,
+    PUpload: {
+        screen: UploadProfile,
         navigationOptions: {
             title: " ",
         }
-    },
+    }
 },
     {
         mode: "modal"

@@ -1,5 +1,5 @@
 const options = {
-    uri: "https://teamsemicolon-backend.herokuapp.com"
+    uri: "http://192.168.219.100:5000"
 }
 
 export default options;

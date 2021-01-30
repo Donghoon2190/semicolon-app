@@ -25,13 +25,17 @@ const Button = styled.View`
 `;
 
 export default ({ navigation }) => {
-
+    if (navigation.getParam("profile")) {
+        console.log("테이크")
+    }
     const cameraRef = useRef();
     const [canTakePhoto, setCanTakePhoto] = useState(true);
     const [loading, setLoading] = useState(true);
     const [hasPermission, setHasPermission] = useState(false);
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
     const takePhoto = async () => {
+
+
         if (!canTakePhoto) {
             return;
         }
@@ -42,7 +46,7 @@ export default ({ navigation }) => {
             });
             const asset = await MediaLibrary.createAssetAsync(uri);
             setCanTakePhoto(true)
-            navigation.navigate("Upload", { photo: asset });
+            navigation.navigate("PUpload", { photo: asset });
         } catch (e) {
             console.log(e);
             setCanTakePhoto(true);

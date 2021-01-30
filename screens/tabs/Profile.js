@@ -33,7 +33,7 @@ export default ({ navigation }) => {
     <ScrollView refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={refresh} />
     }>
-      {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} />}
+      {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} navigation={navigation} />}
     </ScrollView>
   );
 };

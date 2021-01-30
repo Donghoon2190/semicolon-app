@@ -66,6 +66,7 @@ const Post = ({
 }) => {
     const [isLiked, setIsLiked] = useState(isLikedProp);
     const [likeCount, setLikeCount] = useState(likeCountProp);
+    const [commentsList, setCommentsList] = useState(true);
     const [toggleLikeMutaton] = useMutation(TOGGLE_LIKE, {
         variables: {
             postId: id
@@ -85,6 +86,7 @@ const Post = ({
     return (
         <Container>
             <Header>
+
                 <Touchable onPress={() => (
                     navigation.navigate("UserDetail", { username: user.username })
                 )}>
@@ -103,13 +105,18 @@ const Post = ({
                 </Touchable>
             </Header>
             <Swiper style={{ height: constants.height / 2.1 }}>
-                {files.map(file => (
-                    <Image
-                        style={{ width: constants.width, height: constants.height / 2.5 }}
-                        key={file.id}
-                        source={{ uri: file.url }}
-                    />
-                ))}
+                {commentsList ?
+                    (
+                        files.map(file => (
+                            <Image
+                                style={{ width: constants.width, height: constants.height / 2.5 }}
+                                key={file.id}
+                                source={{ uri: file.url }}
+                            />
+                        ))
+                    ) : (dd)
+
+                }
             </Swiper>
             <InfoContainer>
                 <IconsContainer>
@@ -151,6 +158,7 @@ const Post = ({
                 </Touchable>
             </InfoContainer>
         </Container>
+
     );
 };
 

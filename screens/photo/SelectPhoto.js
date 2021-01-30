@@ -6,8 +6,6 @@ import styled from "styled-components";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
 import styles from "../../styles";
-import { cond } from "react-native-reanimated";
-
 const View = styled.View`
   flex: 1;
 `;
@@ -29,9 +27,6 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
-export const sendFirstPhoto = (firstPhoto) => {
-  navigation.navigate("Tabs", { photo: firstPhoto });
-};
 
 export default ({ navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -43,9 +38,6 @@ export default ({ navigation }) => {
     setSelected(photo);
   };
 
-  // const changeSelected = photo => {
-  //   setSelected([...selected, photo]);
-  // };
   const getPhotos = async () => {
     try {
       const { assets } = await MediaLibrary.getAssetsAsync();
@@ -102,7 +94,7 @@ export default ({ navigation }) => {
                         style={{
                           width: constants.width / 3,
                           height: constants.height / 6,
-                          opacity: photo.id === [selected].id ? 0.5 : 1
+                          opacity: photo.id === selected.id ? 0.5 : 1
                         }}
                       />
                     </TouchableOpacity>

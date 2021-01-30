@@ -9,23 +9,11 @@ import constants from "../constants";
 import SquarePhoto from "./SquarePhoto";
 import Post from "./Post";
 import { useLogOut } from "../AuthContext";
-
-
-const Button1 = styled.View`
-  width:90px;
-  align-items: center;
-  margin-left : ${constants.width / 2.3};
-  background-color:${styles.navyColor};
-  height:30px;
-  border-radius: 15px;
-`;
-
-const Text = styled.Text`
-margin-top : 5px;
-  color: white;
-  text-align: center;
-  font-weight: 600;
-`;
+import EditProfile from "./EditProfile";
+import { useMutation } from "react-apollo-hooks";
+import { gql } from "apollo-boost";
+import { ME } from "../screens/tabs/Profile";
+import { FEED_QUERY } from "../screens/tabs/Home";
 
 const ProfileHeader = styled.View`
   padding: 20px;
@@ -34,14 +22,16 @@ const ProfileHeader = styled.View`
   align-items: center;
 `;
 
+
 const HeaderColumn = styled.View``;
 
 const ProfileStats = styled.View`
   flex-direction: row;
 `;
+
 const SquareBox = styled.View`
   flex-direction: row;
-  flexWrap: wrap
+  flexWrap: wrap;
 `;
 
 const Stat = styled.View`
@@ -64,7 +54,9 @@ const ProfileMeta = styled.View`
   padding-horizontal: 20px;
 `;
 
-const Bio = styled.Text``;
+const Bio = styled.Text`
+  margin-top : 10px;
+`;
 
 const ButtonContainer = styled.View`
   padding-vertical: 5px;
@@ -73,87 +65,189 @@ const ButtonContainer = styled.View`
   margin-top: 30px;
 `;
 
+
 const Button = styled.View`
   width: ${constants.width / 2};
   align-items: center;
 `;
 
+const NameContainer = styled.View`
+  padding-vertical: 5px;
+  margin-top: -10px;
+  width:${constants.width / 2.2}
+  height :${constants.height / 10};
+`;
+
+const Button1 = styled.View`
+  margin-top:10px;
+  width:90px;
+  align-items: center;
+  margin-left : ${constants.width / 2.2 / 4};
+  background-color:${styles.navyColor};
+  height:30px;
+  border-radius: 15px;
+`;
+
+const Text = styled.Text`
+margin-top : 5px;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+`;
+const EditText = styled.Text`
+  color: #5c5b5b;
+  text-align: center;
+`;
+const SettingBar = styled.TouchableOpacity`
+  width: ${constants.width - 40}
+  height: 32px
+  backgroundColor: rgba(230,230,230,0.4)
+  padding: 5px
+  borderRadius: 5px
+  margin : auto
+  textAlign: center
+  border:1px #d6d6d6
+`;
+///////////////////////
+const FOLLOW = gql`
+  mutation following($id: String!) {
+    following(id: $id)
+  }
+`;
+
+const UNFOLLOW = gql`
+  mutation unfollowing($id: String!) {
+    unfollowing(id: $id)
+  }
+`;
+///////////////////////
 const UserProfile = ({
+    id,
+    navigation,
     avatar,
     postsCount,
     followersCount,
     followingCount,
+    isFollowing,
     bio,
+    isSelf,
     fullName,
+    username,
+    firstName,
+    lastName,
     posts
 }) => {
     const [isGrid, setIsGrid] = useState(true);
     const toggleGrid = () => setIsGrid(i => !i);
+    const [editProfile, setEditProfile] = useState(false);
+    const [userInfo, setUserInfo] = useState({
+        username,
+        avatar,
+        firstName,
+        lastName,
+        bio,
+    });
+    ///////////////////////
+    const [isFollowingS, setIsFollowing] = useState(isFollowing);
+    const [followMutation] = useMutation(FOLLOW, {
+        variables: { id },
+        refetchQueries: [{ query: ME, query: FEED_QUERY }]
+    });
+    const [unfollowMutation] = useMutation(UNFOLLOW, {
+        variables: { id },
+        refetchQueries: [{ query: ME, query: FEED_QUERY }]
+    });
+
+    const Following = async () => {
+        if (isFollowingS === true) {
+            setIsFollowing(false);
+            unfollowMutation();
+        } else {
+            setIsFollowing(true);
+            followMutation();
+        }
+    };
+
     return (
-        <View>
-            <ProfileHeader>
-                <Image
-                    style={{ height: 80, width: 80, borderRadius: 40 }}
-                    source={{ uri: avatar }}
-                />
-                <HeaderColumn>
+        !editProfile ? (
+            ///////////////////////
+            <View>
+                <ProfileHeader>
+                    <Image
+                        style={{ height: 80, width: 80, borderRadius: 40 }}
+                        source={{ uri: avatar }}
+                    />
+                    <HeaderColumn>
+                        <ProfileStats>
+                            <Stat>
+                                <Bold>{postsCount}</Bold>
+                                <StatName>Posts</StatName>
+                            </Stat>
+                            <Stat>
+                                <Bold>{followersCount}</Bold>
+                                <StatName>Followers</StatName>
+                            </Stat>
+                            <Stat>
+                                <Bold>{followingCount}</Bold>
+                                <StatName>Following</StatName>
+                            </Stat>
+                        </ProfileStats>
+                    </HeaderColumn>
+                </ProfileHeader>
+                <ProfileMeta>
                     <ProfileStats>
-                        <Stat>
-                            <Bold>{postsCount}</Bold>
-                            <StatName>Posts</StatName>
-                        </Stat>
-                        <Stat>
-                            <Bold>{followersCount}</Bold>
-                            <StatName>Followers</StatName>
-                        </Stat>
-                        <Stat>
-                            <Bold>{followingCount}</Bold>
-                            <StatName>Following</StatName>
-                        </Stat>
+                        <NameContainer>
+                            <Bold>{userInfo.firstName + userInfo.lastName}</Bold>
 
+                            <Bio>{userInfo.bio}</Bio>
+                        </NameContainer>
+                        <NameContainer>
+                            {/*                          */}
+                            <Button1>
+                                {isSelf ? (<TouchableOpacity onPress={useLogOut()}><Text>Log Out</Text></TouchableOpacity>)
+                                    :
+                                    (<TouchableOpacity onPress={Following}>
+                                        {isFollowingS ? <Text>Follow</Text> : <Text>UnFollow</Text>}
+                                    </TouchableOpacity>)}
+                            </Button1>
+                            {/*                          */}
+                        </NameContainer>
                     </ProfileStats>
-
-                </HeaderColumn>
-            </ProfileHeader>
-            <ProfileMeta>
-                <Bold>{fullName}</Bold>
-                <ProfileStats>
-                    <Bio>{bio}</Bio>
-                    <Button1>
-                        <TouchableOpacity onPress={useLogOut()}><Text>Log Out</Text></TouchableOpacity>
-                    </Button1>
-                </ProfileStats>
-            </ProfileMeta>
-            <ButtonContainer>
-                <TouchableOpacity onPress={toggleGrid}>
-                    <Button>
-                        <Ionicons
-                            color={isGrid ? styles.blackColor : styles.darkGreyColor}
-                            size={32}
-                            name={Platform.OS === "ios" ? "ios-grid" : "md-grid"}
-                        />
-                    </Button>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={toggleGrid}>
-                    <Button>
-                        <Ionicons
-                            color={!isGrid ? styles.blackColor : styles.darkGreyColor}
-                            size={32}
-                            name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                        />
-                    </Button>
-                </TouchableOpacity>
-            </ButtonContainer>
-            {
-                isGrid ? <SquareBox>{posts && posts.map(p => {
+                </ProfileMeta>
+                {/*                          */}
+                <SettingBar onPress={() => setEditProfile(true)}>
+                    <EditText>프로필 편집</EditText>
+                </SettingBar>
+                <ButtonContainer>
+                    {/*                          */}
+                    <TouchableOpacity onPress={toggleGrid}>
+                        <Button>
+                            <Ionicons
+                                color={isGrid ? styles.blackColor : styles.darkGreyColor}
+                                size={32}
+                                name={Platform.OS === "ios" ? "ios-grid" : "md-grid"}
+                            />
+                        </Button>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={toggleGrid}>
+                        <Button>
+                            <Ionicons
+                                color={!isGrid ? styles.blackColor : styles.darkGreyColor}
+                                size={32}
+                                name={Platform.OS === "ios" ? "ios-list" : "md-list"}
+                            />
+                        </Button>
+                    </TouchableOpacity>
+                </ButtonContainer>
+                {isGrid ? <SquareBox>{posts && posts.map(p => {
                     return (<SquarePhoto key={p.id} {...p} />)
                 })}</SquareBox> : <>
                         {posts && posts.map(p => {
                             return (<Post key={p.id} {...p} />)
-                        })}
-                    </>
-            }
-        </View >
+                        })}</>}
+            </View>
+        ) : (
+                <EditProfile navigation={navigation} userAvatar={avatar} userInfo={userInfo} setUserInfo={setUserInfo} setEditProfile={setEditProfile} />)
     );
 };
 
@@ -164,7 +258,7 @@ UserProfile.propTypes = {
     fullName: PropTypes.string.isRequired,
     isFollowing: PropTypes.bool.isRequired,
     isSelf: PropTypes.bool.isRequired,
-    bio: PropTypes.string,
+    bio: PropTypes.string.isRequired,
     followingCount: PropTypes.number.isRequired,
     followersCount: PropTypes.number.isRequired,
     postsCount: PropTypes.number.isRequired,

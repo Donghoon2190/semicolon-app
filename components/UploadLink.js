@@ -8,7 +8,13 @@ const Container = styled.TouchableOpacity`
 const Text = styled.Text``;
 
 export default withNavigation(({ navigation }) => {
-  return <Container onPress={() => navigation.navigate("Upload", { photo: navigation.getParam("photo") })}>
+  let navigationName;
+  if (navigation.getParam("profile")) {
+    navigationName = "PUpload";
+  } else {
+    navigationName = "Upload";
+  }
+  return <Container onPress={() => navigation.navigate(navigationName, { photo: navigation.getParam("photo") })}>
     <Text>Next</Text>
   </Container>
 });

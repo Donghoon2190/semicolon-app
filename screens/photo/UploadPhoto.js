@@ -60,9 +60,7 @@ export default ({ navigation }) => {
   const photo = navigation.getParam("photo")
   const captionInput = useInput("");
   const locationInput = useInput("");
-  const [uploadMutation] = useMutation(UPLOAD, {
-    refetchQueries: () => [{ query: FEED_QUERY }, { query: ME }]
-  })
+  const [uploadMutation] = useMutation(UPLOAD);
 
   const handleSubmit = async () => {
     if (captionInput.value === "" || locationInput.value === "") {
@@ -91,7 +89,7 @@ export default ({ navigation }) => {
           files: [location],
           caption: captionInput.value,
           location: locationInput.value,
-        }
+        }, refetchQueries: [{ query: FEED_QUERY }, { query: ME }]
       })
       if (upload.id) {
         navigation.navigate("TabNavigation")
