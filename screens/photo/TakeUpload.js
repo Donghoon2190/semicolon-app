@@ -8,7 +8,7 @@ import constants from "../../constants";
 import Loader from "../../components/Loader";
 import { TouchableOpacity, Platform } from "react-native";
 import styles from "../../styles";
-import { withNavigation } from "react-navigation";
+
 const View = styled.View`
   flex: 1;
   justify-content: center;

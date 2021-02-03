@@ -9,7 +9,7 @@ import constants from "../constants";
 import styles from "../styles";
 import { useMutation } from "react-apollo-hooks";
 import { withNavigation } from "react-navigation";
-
+import Popup from "../screens/Popup";
 export const TOGGLE_LIKE = gql`
   mutation toggelLike($postId: String!) {
     toggleLike(postId: $postId)
@@ -66,7 +66,9 @@ const Post = ({
 }) => {
     const [isLiked, setIsLiked] = useState(isLikedProp);
     const [likeCount, setLikeCount] = useState(likeCountProp);
+    const [copyCaption, setCopyCaption] = useState(caption)
     const [commentsList, setCommentsList] = useState(true);
+
     const [toggleLikeMutaton] = useMutation(TOGGLE_LIKE, {
         variables: {
             postId: id
@@ -103,6 +105,7 @@ const Post = ({
                         <Location>{location}</Location>
                     </HeaderUserContainer>
                 </Touchable>
+                {user.isSelf ? <Popup id={id} copyCaption={copyCaption} setCopyCaption={setCopyCaption} /> : null}
             </Header>
             <Swiper style={{ height: constants.height / 2.1 }}>
                 {commentsList ?
@@ -117,8 +120,11 @@ const Post = ({
                     ) : (dd)
 
                 }
+
             </Swiper>
+
             <InfoContainer>
+
                 <IconsContainer>
                     <Touchable onPress={handleLike}>
                         <IconContainer>
@@ -151,7 +157,7 @@ const Post = ({
                     <Bold>{likeCount === 1 ? "1 like" : `${likeCount} likes`}</Bold>
                 </Touchable>
                 <Caption>
-                    <Bold>{user.username}</Bold> {caption}
+                    <Bold>{user.username}</Bold> {copyCaption}
                 </Caption>
                 <Touchable>
                     <CommentCount>See all {comments.length} comments</CommentCount>

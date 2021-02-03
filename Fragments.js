@@ -7,6 +7,7 @@ export const POST_FRAGMENT = gql`
     caption
     user {
       id
+      isSelf
       avatar
       username
     }

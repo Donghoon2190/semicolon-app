@@ -131,7 +131,6 @@ const UserProfile = ({
     isFollowing,
     bio,
     isSelf,
-    fullName,
     username,
     firstName,
     lastName,

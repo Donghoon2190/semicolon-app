@@ -8,6 +8,7 @@ import AuthInput from "./AuthInput";
 import { gql } from 'apollo-boost';
 import { ME } from "../screens/tabs/Profile";
 import { FEED_QUERY } from "../screens/tabs/Home";
+
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -16,7 +17,6 @@ const View = styled.View`
 const Enter = styled.View`
 margin-top: 15px
 `;
-
 
 const EDIT_USER = gql`
     mutation editUser(

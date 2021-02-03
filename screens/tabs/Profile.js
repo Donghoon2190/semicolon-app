@@ -5,7 +5,6 @@ import { USER_FRAGMENT } from "../../Fragments";
 import Loader from "../../components/Loader";
 import { useQuery } from "react-apollo-hooks";
 import UserProfile from "../../components/UserProfile";
-import styled from "styled-components/native";
 
 export const ME = gql`
   {
