@@ -49,3 +49,31 @@ export const USER_FRAGMENT = gql`
   }
   ${POST_FRAGMENT}
 `;
+export const STORY_FRAGMENT = gql`
+  fragment StoryParts on Story {
+  id
+files {
+      id
+      url
+    }
+caption
+user {
+      id
+      isSelf
+      avatar
+      username
+    }
+tagUser{
+      id
+      isSelf
+      avatar
+      username
+    }
+seenUsers{
+      id
+      isSelf
+      avatar
+      username
+    }
+  }
+`;
