@@ -5,9 +5,9 @@ import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
 import { Alert } from "react-native";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation } from 'react-apollo-hooks';
 import { CONFIRM_SECRET } from "./AuthQueries";
-import { useLogIn } from "../../AuthContext";
+
 
 const View = styled.View`
   justify-content: center;
@@ -17,7 +17,6 @@ const View = styled.View`
 
 export default ({ navigation }) => {
   const confirmInput = useInput("");
-  const logIn = useLogIn();
   const [loading, setLoading] = useState(false);
   const [confirmSecretMutation] = useMutation(CONFIRM_SECRET, {
     variables: {
@@ -28,7 +27,7 @@ export default ({ navigation }) => {
   const handleConfirm = async () => {
     const { value } = confirmInput;
     if (value === "" || !value.includes(" ")) {
-      return Alert.alert("Invalid secret");
+      return Alert.alert("제대로 입력해주세요!");
     }
     try {
       setLoading(true);
@@ -36,13 +35,13 @@ export default ({ navigation }) => {
         data: { confirmSecret }
       } = await confirmSecretMutation();
       if (confirmSecret !== "" || confirmSecret !== false) {
-        logIn(confirmSecret);
+        navigation.navigate("Signup", { email: navigation.getParam("email") });
       } else {
-        Alert.alert("Wrong secret!");
+        Alert.alert("시크릿 코드가 틀렸어요..");
       }
     } catch (e) {
       console.log(e);
-      Alert.alert("Can't confirm secret");
+      Alert.alert("지금은 시도할 수 없어요.");
     } finally {
       setLoading(false);
     }
@@ -57,7 +56,7 @@ export default ({ navigation }) => {
           onSubmitEditing={handleConfirm}
           autoCorrect={false}
         />
-        <AuthButton loading={loading} onPress={handleConfirm} text="Confirm" />
+        <AuthButton loading={loading} onPress={handleConfirm} text="확인" />
       </View>
     </TouchableWithoutFeedback>
   );

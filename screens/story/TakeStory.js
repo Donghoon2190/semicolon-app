@@ -41,7 +41,7 @@ export default ({ navigation }) => {
       });
       const asset = await MediaLibrary.createAssetAsync(uri);
       setCanTakePhoto(true);
-      navigation.navigate("Upload", { photo: asset });
+      navigation.navigate("StoryUpload", { photo: asset });
     } catch (e) {
       console.log(e);
       setCanTakePhoto(true);
@@ -72,34 +72,36 @@ export default ({ navigation }) => {
     askPermission();
   }, []);
   return (
-    <View>
-      {loading ? (
-        <Loader />
-      ) : hasPermission ? (
-        <>
-          <Camera
-            ref={cameraRef}
-            type={cameraType}
-            style={{
-              justifyContent: "flex-end",
-              padding: 15,
-              width: constants.width,
-              height: constants.width
-            }}
-          >
-            <TouchableOpacity onPress={toggleType}>
-              <Icon>
-                <Ionicons name="camera-reverse-outline" size={32} color="white" />
-              </Icon>
-            </TouchableOpacity>
-          </Camera>
-          <View>
-            <TouchableOpacity onPress={takePhoto} disabled={!canTakePhoto}>
-              <Button />
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : null}
-    </View>
+    // <View>
+    //   {loading ? (
+    //     <Loader />
+    //   ) : hasPermission ? (
+    //     <>
+    //       <Camera
+    //         ref={cameraRef}
+    //         type={cameraType}
+    //         style={{
+    //           justifyContent: "flex-end",
+    //           padding: 15,
+    //           width: constants.width,
+    //           height: constants.width
+    //         }}
+    //       >
+    //         <TouchableOpacity onPress={toggleType}>
+    //           <Icon>
+    //             <Ionicons name="camera-reverse-outline" size={32} color="white" />
+    //           </Icon>
+    //         </TouchableOpacity>
+    //       </Camera>
+    //       <View>
+    //         <TouchableOpacity onPress={takePhoto} disabled={!canTakePhoto}>
+    //           <Button />
+    //         </TouchableOpacity>
+    //       </View>
+    //     </>
+    //   ) : null}
+    // </View>
+    null
   );
+
 };

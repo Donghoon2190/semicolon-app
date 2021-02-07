@@ -3,7 +3,7 @@ import { useQuery } from "react-apollo-hooks";
 import { gql } from "apollo-boost";
 import { POST_FRAGMENT } from "../Fragments";
 import Loader from "../components/Loader";
-import Post from "../components/Post";
+import Comments from "../components/Comments";
 import { ScrollView } from "react-native";
 
 const POST_DETAIL = gql`
@@ -24,8 +24,9 @@ export default ({ navigation }) => {
       {loading ? (
         <Loader />
       ) : (
-        data && data.seeFullPost && <Post {...data.seeFullPost} />
+        data && data.seeFullPost && <Comments {...data.seeFullPost} />
       )}
     </ScrollView>
   );
 };
+

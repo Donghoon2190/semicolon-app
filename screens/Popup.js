@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import styled from 'styled-components';
 import AuthInput from '../components/AuthInput';
@@ -7,7 +7,9 @@ import useInput from '../hooks/useInput';
 import { ActivityIndicator } from "react-native";
 import { useMutation } from 'react-apollo-hooks';
 import { gql } from "apollo-boost";
-import { FEED_QUERY } from './tabs/Home';
+import { FEED_QUERY } from './home/Home';
+import constants from "../Constants";
+
 const Button = styled.TouchableOpacity`
     background-color:whitesmoke;
     justifyContent: center
@@ -44,9 +46,7 @@ const DELETE_POST = gql`
 `;
 
 export default ({ id, copyCaption, setCopyCaption }) => {
-    const toggleModal = () => { setModalVisible(!isModalVisible) };
     const [isModalVisible, setModalVisible] = useState(false);
-    const toggleInput = () => { setInputUp(!inputUp) }
     const [inputUp, setInputUp] = useState(false);
     const [loading, setLoading] = useState(false);
     const captionInput = useInput(copyCaption);
@@ -59,26 +59,36 @@ export default ({ id, copyCaption, setCopyCaption }) => {
         });
 
     const editSubmit = async () => {
-        setCopyCaption(captionInput.value)
-        setLoading(true)
+        setCopyCaption(captionInput.value);
+        setLoading(true);
         await editPostMutation();
-        setLoading(false)
-        toggleInput()
-        toggleModal()
+        setLoading(false);
+        setInputUp(!inputUp);
     }
+
     const deletePost = async () => {
-        setLoading(true)
+        setLoading(true);
         await deletePostMutation();
-        setLoading(false)
-        toggleModal()
+        setLoading(false);
+        setModalVisible(!isModalVisible);
     }
+
+
+
     return (
         <View style={{ flex: 1 }}>
-            <Text onPress={toggleModal} style={{ fontWeight: "bold", fontSize: 20, marginLeft: "auto" }}>...</Text>
-            <Modal isVisible={isModalVisible}>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text onPress={() => {
+                setModalVisible(!isModalVisible);
+            }}
+                style={{ fontWeight: "bold", fontSize: 20, marginLeft: "auto" }}>...</Text>
+            <Modal visible={isModalVisible}
+                animationType="slide">
+                <View style={styles.modalView} >
                     <View style={{ marginBottom: 10, width: 100 }}>
-                        <Button onPress={toggleInput}>
+                        <Button onPress={() => {
+                            setModalVisible(!isModalVisible);
+                            setInputUp(!inputUp);
+                        }}>
                             {loading ? <ActivityIndicator color={"black"} /> : <Text style={{ color: "black", fontWeight: "bold" }}>수정</Text>}
                         </Button>
                     </View>
@@ -88,15 +98,18 @@ export default ({ id, copyCaption, setCopyCaption }) => {
                         </Button>
                     </View>
                     <View style={{ marginBottom: 10, width: 100 }}>
-                        <Button onPress={toggleModal}>
+                        <Button onPress={() => {
+                            setModalVisible(!isModalVisible);
+                        }}>
                             {loading ? <ActivityIndicator color={"black"} /> : <Text style={{ color: "black", fontWeight: "bold" }}>취소</Text>}
                         </Button>
                     </View>
                 </View >
             </Modal >
 
-            <Modal isVisible={inputUp}>
-                <View style={{ alignItems: 'center' }}>
+            <Modal visible={inputUp}
+                animationType="slide">
+                <View style={styles.modalView}>
                     <View style={{ marginBottom: 10 }}>
                         <AuthInput placeholder={"Caption"} value={captionInput.value} onChange={captionInput.onChange} />
                     </View>
@@ -104,7 +117,10 @@ export default ({ id, copyCaption, setCopyCaption }) => {
                         <InputButton onPress={editSubmit}>
                             {loading ? <ActivityIndicator color={"black"} /> : <Text style={{ color: "black", fontWeight: "bold" }}>수정</Text>}
                         </InputButton>
-                        <InputButton onPress={toggleInput}>
+                        <InputButton onPress={() => {
+                            setInputUp(!inputUp);
+                            setModalVisible(!isModalVisible);
+                        }}>
                             {loading ? <ActivityIndicator color={"black"} /> : <Text style={{ color: "black", fontWeight: "bold" }}>취소</Text>}
                         </InputButton>
                     </View>
@@ -115,3 +131,14 @@ export default ({ id, copyCaption, setCopyCaption }) => {
     );
 
 }
+
+const styles = StyleSheet.create({
+    modalView: {
+        marginLeft: -constants.width / 7,
+        width: constants.width * 1.2,
+        height: constants.height,
+        backgroundColor: "rgba(0,0,0,0.7)",
+        alignItems: "center",
+        justifyContent: 'center'
+    }
+});

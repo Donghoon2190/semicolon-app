@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Image, ActivityIndicator, Alert } from "react-native";
+import { Image, ActivityIndicator, Alert,Platform } from "react-native";
 import styled from "styled-components/native";
 import axios from "axios";
 import { gql } from "apollo-boost";
 import { useMutation } from "react-apollo-hooks";
-import { FEED_QUERY } from "../tabs/Home";
+import { FEED_QUERY } from "../home/Home";
 import { ME } from "../tabs/Profile";
 
 
@@ -52,10 +52,12 @@ export default ({ navigation }) => {
   const handleSubmit = async () => {
 
     const formData = new FormData();
-    const name = photo.filename;
+      const name = photo.filename;
+      const [, type] = name.split(".");
+    const imageType = Platform.os === "ios" ? type.toLowerCase() : "image/jpeg";
     formData.append("file", {
       name,
-      type: "image/jpeg",
+      type: imageType,
       uri: photo.uri
     });
     try {

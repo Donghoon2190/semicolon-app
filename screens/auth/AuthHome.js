@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import constants from "../../constants";
+import Constants from "../../Constants";
 import AuthButton from "../../components/AuthButton";
 
 const View = styled.View`
@@ -10,8 +10,7 @@ const View = styled.View`
 `;
 
 const Image = styled.Image`
-  margin : -30px 0px;
-  width: ${constants.width / 1.5};
+  width: ${Constants.width / 2.5};
 `;
 
 const Touchable = styled.TouchableOpacity``;
@@ -24,16 +23,16 @@ const LoginLinkText = styled.Text`
 `;
 
 export default ({ navigation }) => (
-    <View>
-        <Image resizeMode={"contain"} source={require("../../assets/logo.png")} />
-        <AuthButton
-            text={"Create New Account"}
-            onPress={() => navigation.navigate("Signup")}
-        />
-        <Touchable onPress={() => navigation.navigate("Login")}>
-            <LoginLink>
-                <LoginLinkText>Log in</LoginLinkText>
-            </LoginLink>
-        </Touchable>
-    </View>
+  <View>
+    <Image resizeMode={"contain"} source={require("../../assets/logo.png")} />
+    <AuthButton
+      text={"회원가입"}
+      onPress={() => navigation.navigate("CheckEmail")}
+    />
+    <Touchable onPress={() => navigation.navigate("Login")}>
+      <LoginLink>
+        <LoginLinkText>로그인</LoginLinkText>
+      </LoginLink>
+    </Touchable>
+  </View>
 );

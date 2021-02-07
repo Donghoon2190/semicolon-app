@@ -5,6 +5,7 @@ import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
 import Loader from "../../../components/Loader";
 import SquarePhoto from "../../../components/SquarePhoto";
+import styled from "styled-components/native";
 
 
 export const SEARCH = gql`
@@ -39,15 +40,15 @@ const SearchPresenter = ({ term, shouldFetch }) => {
             setRefreshing(false);
         }
     };
-    return (
-        <ScrollView contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap" }} refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing} />} >
+  return (
+        <ScrollView contentContainerStyle={{ flexDirection: "row", flexWrap:"wrap" }} refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing} />} >
             {loading ? (<Loader />
             ) : (data &&
                 data.searchPost &&
                 data.searchPost.map(post => <SquarePhoto key={post.id} {...post} />)
                 )
             }
-        </ScrollView >
+      </ScrollView >
     );
 };
 
