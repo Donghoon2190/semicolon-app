@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import styles from "../styles";
 import { Platform } from "@unimodules/core";
-import constants from "../constants";
+import constants from "../Constants";
 import SquarePhoto from "./SquarePhoto";
 import Post from "./Post";
 import { useLogOut } from "../AuthContext";
@@ -13,7 +13,7 @@ import EditProfile from "./EditProfile";
 import { useMutation } from "react-apollo-hooks";
 import { gql } from "apollo-boost";
 import { ME } from "../screens/tabs/Profile";
-import { FEED_QUERY } from "../screens/tabs/Home";
+import { FEED_QUERY } from "../screens/home/Home";
 
 const ProfileHeader = styled.View`
   padding: 20px;
@@ -21,8 +21,6 @@ const ProfileHeader = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
-
-
 const HeaderColumn = styled.View``;
 
 const ProfileStats = styled.View`
@@ -94,10 +92,7 @@ margin-top : 5px;
   text-align: center;
   font-weight: 600;
 `;
-const EditText = styled.Text`
-  color: #5c5b5b;
-  text-align: center;
-`;
+
 const SettingBar = styled.TouchableOpacity`
   width: ${constants.width - 40}
   height: 32px
@@ -108,189 +103,190 @@ const SettingBar = styled.TouchableOpacity`
   textAlign: center
   border:1px #d6d6d6
 `;
-///////////////////////
+
+const EditText = styled.Text`
+  color: #5c5b5b;
+  text-align: center;
+`;
+
 const FOLLOW = gql`
-  mutation following($id: String!) {
-    following(id: $id)
+  mutation follow($id: String!) {
+    follow(id: $id)
   }
 `;
 
 const UNFOLLOW = gql`
-  mutation unfollowing($id: String!) {
-    unfollowing(id: $id)
+  mutation unfollow($id: String!) {
+    unfollow(id: $id)
   }
 `;
-///////////////////////
+
 const UserProfile = ({
-    id,
-    navigation,
-    avatar,
-    postsCount,
-    followersCount,
-    followingCount,
-    isFollowing,
-    bio,
-    isSelf,
+  id,
+  avatar,
+  postsCount,
+  followersCount,
+  followingCount,
+  bio,
+  posts,
+  navigation,
+  isFollowing,
+  isSelf,
+  username,
+  firstName,
+  lastName,
+
+}) => {
+  const [isGrid, setIsGrid] = useState(true);
+  const toggleGrid = () => setIsGrid(i => !i);
+  const [editProfile, setEditProfile] = useState(false);
+  const [userInfo, setUserInfo] = useState({
     username,
+    avatar,
     firstName,
     lastName,
-    posts
-}) => {
-    const [isGrid, setIsGrid] = useState(true);
-    const toggleGrid = () => setIsGrid(i => !i);
-    const [editProfile, setEditProfile] = useState(false);
-    const [userInfo, setUserInfo] = useState({
-        username,
-        avatar,
-        firstName,
-        lastName,
-        bio,
-    });
-    ///////////////////////
-    const [isFollowingS, setIsFollowing] = useState(isFollowing);
-    const [followMutation] = useMutation(FOLLOW, {
-        variables: { id },
-        refetchQueries: [{ query: ME, query: FEED_QUERY }]
-    });
-    const [unfollowMutation] = useMutation(UNFOLLOW, {
-        variables: { id },
-        refetchQueries: [{ query: ME, query: FEED_QUERY }]
-    });
+    bio,
+  });
+  const [isFollowingS, setIsFollowing] = useState(isFollowing);
+  const [followMutation] = useMutation(FOLLOW, {
+    variables: { id },
+    refetchQueries: [{ query: ME, query: FEED_QUERY }]
 
-    const Following = async () => {
-        if (isFollowingS === true) {
-            setIsFollowing(false);
-            unfollowMutation();
-        } else {
-            setIsFollowing(true);
-            followMutation();
-        }
-    };
+  });
+  const [unfollowMutation] = useMutation(UNFOLLOW, {
+    variables: { id },
+    refetchQueries: [{ query: ME, query: FEED_QUERY }]
 
-    return (
-        !editProfile ? (
-            ///////////////////////
-            <View>
-                <ProfileHeader>
-                    <Image
-                        style={{ height: 80, width: 80, borderRadius: 40 }}
-                        source={{ uri: avatar }}
-                    />
-                    <HeaderColumn>
-                        <ProfileStats>
-                            <Stat>
-                                <Bold>{postsCount}</Bold>
-                                <StatName>Posts</StatName>
-                            </Stat>
-                            <Stat>
-                                <Bold>{followersCount}</Bold>
-                                <StatName>Followers</StatName>
-                            </Stat>
-                            <Stat>
-                                <Bold>{followingCount}</Bold>
-                                <StatName>Following</StatName>
-                            </Stat>
-                        </ProfileStats>
-                    </HeaderColumn>
-                </ProfileHeader>
-                <ProfileMeta>
-                    <ProfileStats>
-                        <NameContainer>
-                            <Bold>{userInfo.firstName + userInfo.lastName}</Bold>
+  });
+  const Following = async () => {
+    if (isFollowingS === true) {
+      setIsFollowing(false);
+      unfollowMutation();
+    } else {
+      setIsFollowing(true);
+      followMutation();
+    }
+  };
+  return (!editProfile ? (
+    <View>
+      <ProfileHeader>
+        <Image
+          style={{ height: 80, width: 80, borderRadius: 40 }}
+          source={{ uri: avatar }}
+        />
+        <HeaderColumn>
+          <ProfileStats>
+            <Stat>
+              <Bold>{postsCount}</Bold>
+              <StatName>Posts</StatName>
+            </Stat>
+            <Stat>
+              <Bold>{followersCount}</Bold>
+              <StatName>Followers</StatName>
+            </Stat>
+            <Stat>
+              <Bold>{followingCount}</Bold>
+              <StatName>Following</StatName>
+            </Stat>
+          </ProfileStats>
+        </HeaderColumn>
+      </ProfileHeader>
+      <ProfileMeta>
+        <ProfileStats>
+          <NameContainer>
+            <Bold>{userInfo.firstName + userInfo.lastName}</Bold>
 
-                            <Bio>{userInfo.bio}</Bio>
-                        </NameContainer>
-                        <NameContainer>
-                            {/*                          */}
-                            <Button1>
-                                {isSelf ? (<TouchableOpacity onPress={useLogOut()}><Text>Log Out</Text></TouchableOpacity>)
-                                    :
-                                    (<TouchableOpacity onPress={Following}>
-                                        {isFollowingS ? <Text>Follow</Text> : <Text>UnFollow</Text>}
-                                    </TouchableOpacity>)}
-                            </Button1>
-                            {/*                          */}
-                        </NameContainer>
-                    </ProfileStats>
-                </ProfileMeta>
-                {/*                          */}
-                <SettingBar onPress={() => setEditProfile(true)}>
-                    <EditText>프로필 편집</EditText>
-                </SettingBar>
-                <ButtonContainer>
-                    {/*                          */}
-                    <TouchableOpacity onPress={toggleGrid}>
-                        <Button>
-                            <Ionicons
-                                color={isGrid ? styles.blackColor : styles.darkGreyColor}
-                                size={32}
-                                name={Platform.OS === "ios" ? "ios-grid" : "md-grid"}
-                            />
-                        </Button>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={toggleGrid}>
-                        <Button>
-                            <Ionicons
-                                color={!isGrid ? styles.blackColor : styles.darkGreyColor}
-                                size={32}
-                                name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                            />
-                        </Button>
-                    </TouchableOpacity>
-                </ButtonContainer>
-                {isGrid ? <SquareBox>{posts && posts.map(p => {
-                    return (<SquarePhoto key={p.id} {...p} />)
-                })}</SquareBox> : <>
-                        {posts && posts.map(p => {
-                            return (<Post key={p.id} {...p} />)
-                        })}</>}
-            </View>
-        ) : (
-                <EditProfile navigation={navigation} userAvatar={avatar} userInfo={userInfo} setUserInfo={setUserInfo} setEditProfile={setEditProfile} />)
-    );
+            <Bio>{userInfo.bio}</Bio>
+          </NameContainer>
+          <NameContainer>
+            {/*                          */}
+            <Button1>
+              {isSelf ? (<TouchableOpacity onPress={useLogOut()}><Text>로그아웃</Text></TouchableOpacity>)
+                :
+                (<TouchableOpacity onPress={Following}>
+                  {isFollowingS ? <Text>UnFollow</Text> : <Text>Follow</Text>}
+                </TouchableOpacity>)}
+            </Button1>
+            {/*                          */}
+          </NameContainer>
+        </ProfileStats>
+      </ProfileMeta>
+      <SettingBar onPress={() => setEditProfile(true)}>
+        <EditText>프로필 편집</EditText>
+      </SettingBar>
+      <ButtonContainer>
+        <TouchableOpacity onPress={toggleGrid}>
+          <Button>
+            <Ionicons
+              color={isGrid ? styles.blackColor : styles.darkGreyColor}
+              size={32}
+              name={Platform.OS === "ios" ? "ios-grid" : "md-grid"}
+            />
+          </Button>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={toggleGrid}>
+          <Button>
+            <Ionicons
+              color={!isGrid ? styles.blackColor : styles.darkGreyColor}
+              size={32}
+              name={Platform.OS === "ios" ? "ios-list" : "md-list"}
+            />
+          </Button>
+        </TouchableOpacity>
+      </ButtonContainer>
+      {isGrid ? <SquareBox>{posts && posts.map(p => {
+        return (<SquarePhoto key={p.id} {...p} />)
+      })}</SquareBox> : <>
+          {posts && posts.map(p => {
+            return (<Post key={p.id} {...p} />)
+          })}</>}
+    </View>) : (
+      <EditProfile navigation={navigation} userAvatar={avatar} userInfo={userInfo} setUserInfo={setUserInfo} setEditProfile={setEditProfile} />
+    )
+  );
 };
 
 UserProfile.propTypes = {
-    id: PropTypes.string.isRequired,
-    avatar: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    fullName: PropTypes.string.isRequired,
-    isFollowing: PropTypes.bool.isRequired,
-    isSelf: PropTypes.bool.isRequired,
-    bio: PropTypes.string.isRequired,
-    followingCount: PropTypes.number.isRequired,
-    followersCount: PropTypes.number.isRequired,
-    postsCount: PropTypes.number.isRequired,
-    posts: PropTypes.arrayOf(
+  id: PropTypes.string.isRequired,
+  avatar: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired,
+  isFollowing: PropTypes.bool.isRequired,
+  isSelf: PropTypes.bool.isRequired,
+  bio: PropTypes.string.isRequired,
+  followingCount: PropTypes.number.isRequired,
+  followersCount: PropTypes.number.isRequired,
+  postsCount: PropTypes.number.isRequired,
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        avatar: PropTypes.string,
+        username: PropTypes.string.isRequired
+      }).isRequired,
+      files: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            user: PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                avatar: PropTypes.string,
-                username: PropTypes.string.isRequired
-            }).isRequired,
-            files: PropTypes.arrayOf(
-                PropTypes.shape({
-                    id: PropTypes.string.isRequired,
-                    url: PropTypes.string.isRequired
-                })
-            ).isRequired,
-            likeCount: PropTypes.number.isRequired,
-            isLiked: PropTypes.bool.isRequired,
-            comments: PropTypes.arrayOf(
-                PropTypes.shape({
-                    id: PropTypes.string.isRequired,
-                    text: PropTypes.string.isRequired,
-                    user: PropTypes.shape({
-                        id: PropTypes.string.isRequired,
-                        username: PropTypes.string.isRequired
-                    }).isRequired
-                })
-            ).isRequired,
-            caption: PropTypes.string.isRequired,
-            location: PropTypes.string,
-            createdAt: PropTypes.string.isRequired
+          id: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired
         })
-    )
+      ).isRequired,
+      likeCount: PropTypes.number.isRequired,
+      isLiked: PropTypes.bool.isRequired,
+      comments: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          text: PropTypes.string.isRequired,
+          user: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            username: PropTypes.string.isRequired
+          }).isRequired
+        })
+      ).isRequired,
+      caption: PropTypes.string.isRequired,
+      location: PropTypes.string,
+      createdAt: PropTypes.string.isRequired
+    })
+  )
 };
 export default UserProfile;

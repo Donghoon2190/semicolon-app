@@ -1,10 +1,10 @@
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
-import React from "react";
 import { createStackNavigator } from 'react-navigation-stack';
 import SelectPhoto from "../screens/photo/SelectPhoto";
 import TakePhoto from "../screens/photo/TakePhoto";
 import UploadPhoto from "../screens/photo/UploadPhoto";
-import styles from '../styles';
+import styles from "../styles";
+import React from "react";
 import UploadLink from '../components/UploadLink';
 
 const PhotoTabs = createMaterialTopTabNavigator(
@@ -12,50 +12,62 @@ const PhotoTabs = createMaterialTopTabNavigator(
         Select: {
             screen: SelectPhoto,
             navigationOptions: {
-                tabBarLabel: "Select"
+                tabBarLabel: "사진 선택"
             }
         },
         Take: {
             screen: TakePhoto,
             navigationOptions: {
-                tabBarLabel: "Take"
+                tabBarLabel: "사진 촬영"
             }
         }
-
     },
     {
-        tabBarPosition: "bottom",
+       tabBarPosition: "bottom",
         tabBarOptions: {
+            
             indicatorStyle: {
                 backgroundColor: styles.navyColor,
                 marginBottom: 48
             },
             labelStyle: {
-                fontWeight: "bold"
+            color: styles.navyColor,
+            fontWeight: "600"
             },
             style: {
+                //paddingBottom: 20,
                 backgroundColor: styles.searchColor
             }
         }
     }
 );
 
-export default createStackNavigator({
-    Tabs: {
-        screen: PhotoTabs,
-        navigationOptions: {
-            title: " ",
-            headerRight: <UploadLink />
-        }
-    },
-    Upload: {
-        screen: UploadPhoto,
-        navigationOptions: {
-            title: " ",
-        }
-    },
-},
+
+
+export default createStackNavigator(
     {
-        mode: "modal"
+        PhotoTabs: {
+            screen:PhotoTabs,
+            navigationOptions: {
+                //headerShown:false,
+                headerBackTitle: " ",
+                headerTintColor: styles.blackColor,
+                title: "사진 선택",
+                headerRight: <UploadLink />
+            }
+           
+        },
+        Upload: {
+            screen:UploadPhoto,
+            navigationOptions: {
+                headerBackTitle: " ",
+                headerTintColor: styles.blackColor,
+                title:"업로드"
+            }
+        }
+        
+    },
+    {
+        mode:"modal"
     }
 );

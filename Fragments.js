@@ -21,6 +21,7 @@ export const POST_FRAGMENT = gql`
       id
       text
       user {
+        avatar
         id
         username
       }
@@ -28,11 +29,34 @@ export const POST_FRAGMENT = gql`
     createdAt
   }
 `;
-
+export const ME_FRAGMENT = gql`
+  fragment MeParts on User {
+    id
+    avatar
+    stories{
+      id
+      user{
+        username
+      }
+    }
+    username
+    fullName
+    firstName
+    lastName
+    isSelf
+    bio
+  }
+`;
 export const USER_FRAGMENT = gql`
   fragment UserParts on User {
     id
     avatar
+    stories{
+      id
+      user{
+        username
+      }
+    }
     username
     fullName
     firstName
@@ -49,6 +73,7 @@ export const USER_FRAGMENT = gql`
   }
   ${POST_FRAGMENT}
 `;
+
 export const STORY_FRAGMENT = gql`
   fragment StoryParts on Story {
   id
@@ -76,4 +101,13 @@ seenUsers{
       username
     }
   }
+`;
+
+export const ME = gql`
+  {
+    me {
+      ...UserParts
+    }
+  }
+  ${USER_FRAGMENT}
 `;

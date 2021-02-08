@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
-import constants from "../constants";
+import constants from "../Constants";
 
 const Container = styled.View`
   margin-bottom: 10px;
@@ -24,7 +24,8 @@ const AuthInput = ({
     returnKeyType = "done",
     onChange,
     onSubmitEditing = () => null,
-    autoCorrect = true
+    autoCorrect = true,
+    secureTextEntry = false
 }) => (
     <Container>
         <TextInput
@@ -36,6 +37,7 @@ const AuthInput = ({
             onSubmitEditing={onSubmitEditing}
             autoCorrect={autoCorrect}
             value={value}
+            secureTextEntry={secureTextEntry}
         />
     </Container>
 );
@@ -54,8 +56,9 @@ AuthInput.propTypes = {
     autoCapitalize: PropTypes.oneOf(["none", "sentences", "words", "characters"]),
     onChange: PropTypes.func.isRequired,
     returnKeyType: PropTypes.oneOf(["done", "go", "next", "search", "send"]),
-    onEndEditing: PropTypes.func,
-    autoCorrect: PropTypes.bool
+    onSubmitEditing: PropTypes.func,
+    autoCorrect: PropTypes.bool,
+    secureTextEntry: PropTypes.bool
 };
 
 export default AuthInput;

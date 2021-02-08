@@ -72,36 +72,35 @@ export default ({ navigation }) => {
     askPermission();
   }, []);
   return (
-    // <View>
-    //   {loading ? (
-    //     <Loader />
-    //   ) : hasPermission ? (
-    //     <>
-    //       <Camera
-    //         ref={cameraRef}
-    //         type={cameraType}
-    //         style={{
-    //           justifyContent: "flex-end",
-    //           padding: 15,
-    //           width: constants.width,
-    //           height: constants.width
-    //         }}
-    //       >
-    //         <TouchableOpacity onPress={toggleType}>
-    //           <Icon>
-    //             <Ionicons name="camera-reverse-outline" size={32} color="white" />
-    //           </Icon>
-    //         </TouchableOpacity>
-    //       </Camera>
-    //       <View>
-    //         <TouchableOpacity onPress={takePhoto} disabled={!canTakePhoto}>
-    //           <Button />
-    //         </TouchableOpacity>
-    //       </View>
-    //     </>
-    //   ) : null}
-    // </View>
-    null
+    <View>
+      {loading ? (
+        <Loader />
+      ) : hasPermission ? (
+        <>
+          <Camera
+            ref={cameraRef}
+            type={cameraType}
+            style={{
+              justifyContent: "flex-end",
+              padding: 15,
+              width: constants.width,
+              height: constants.width
+            }}
+          >
+            <TouchableOpacity onPress={toggleType}>
+              <Icon>
+                <Ionicons name="camera-reverse-outline" size={32} color="white" />
+              </Icon>
+            </TouchableOpacity>
+          </Camera>
+          <View>
+            <TouchableOpacity onPress={takePhoto} disabled={!canTakePhoto}>
+              <Button />
+            </TouchableOpacity>
+          </View>
+        </>
+      ) : null}
+    </View>
   );
 
 };

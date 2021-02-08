@@ -8,6 +8,7 @@ import { Thumbnail } from 'native-base';
 import Post from "../../components/Post";
 import { POST_FRAGMENT, USER_FRAGMENT } from "../../Fragments";
 import { LinearGradient } from 'expo-linear-gradient';
+import StoryDetail from "../story/StoryDetail";
 
 export const FEED_QUERY = gql`
   {
@@ -43,6 +44,8 @@ export const ME = gql`
   ${USER_FRAGMENT}
 `;
 
+
+
 const Story = styled.TouchableOpacity`
 `;
 
@@ -50,14 +53,16 @@ export default () => {
   let localStyles = styles()
 
   const [refreshing, setRefreshing] = useState(false);
+  const [modalUp, setModalUp] = useState(false);
+  const [nowId, setNowId] = useState(null);
   const { loading, data, refetch } = useQuery(FEED_QUERY);
   const { loading: sloading, data: sdata, refetch: srefetch } = useQuery(STORY_QUERY);
   const { loading: mloading, data: mdata, refetch: mrefetch } = useQuery(ME);
-  const [seenUserMutation] = useMutation(SEEN_QUERY, {
-    variables: {
-      storyId: id
-    }
-  });
+  // const [seenUserMutation] = useMutation(SEEN_QUERY, {
+  //   variables: {
+  //     storyId: id
+  //   }
+  // });
 
   const refresh = async () => {
     try {
@@ -97,6 +102,7 @@ export default () => {
                   {mdata &&
                     mdata.me &&
                     mdata.me.stories ?
+
                     <Story>
                       <LinearGradient start={[1, 0.5]}
                         end={[0, 0]}
@@ -120,13 +126,18 @@ export default () => {
                       </LinearGradient>
                       <Text style={{ color: 'gray', textAlign: 'center', marginTop: 5 }}>내 스토리</Text>
                     </Story>
-
                   }
+
                   {sdata &&
                     sdata.feedStories &&
                     sdata.feedStories.map(followings =>
-
-                      <Story>
+                      // followings.stories.map(
+                      //   story => story.id === mdata.me.clickedStories.id ?
+                      <Story onPress={() => {
+                        setNowId(followings.id)
+                        setModalUp(!modalUp)
+                      }}>
+                        {modalUp ? < StoryDetail id={nowId} visibles={modalUp} setModalUp={setModalUp} /> : null}
                         <LinearGradient start={[1, 0.5]}
                           end={[0, 0]}
                           colors={['#e3179e', 'tomato', 'orange', 'yellow']}
@@ -137,19 +148,22 @@ export default () => {
                         </LinearGradient>
                         <Text style={{ textAlign: 'center', marginTop: 5 }}>{followings.username}</Text>
                       </Story>
-
+                      // :
                       // <Story>
-                      //   <LinearGradient start={[1, 0.5]}
-                      //     end={[0, 0]}
+                      //    <LinearGradient start={[1, 0.5]}
+                      //    end={[0, 0]}
                       //     colors={['lightgray', 'lightgray']}
-                      //     style={localStyles.linearGradient}>
-                      //     <View style={localStyles.button}>
-                      //       <Thumbnail style={{ marginHorizontal: 'auto', borderColor: 'white', borderWidth: 2 }} source={{ uri: followings.avatar }} />
-                      //     </View>
-                      //   </LinearGradient>
-                      //   <Text style={{ color : 'gray', textAlign: 'center', marginTop: 5 }}>{followings.username}</Text>
-                      // </Story> 
-                    )}
+                      //      style={localStyles.linearGradient}>
+                      //      <View style={localStyles.button}>
+                      //        <Thumbnail style={{ marginHorizontal: 'auto', borderColor: 'white', borderWidth: 2 }} source={{ uri: followings.avatar }} />
+                      //      </View>
+                      //    </LinearGradient>
+                      //    <Text style={{ color : 'gray', textAlign: 'center', marginTop: 5 }}>{followings.username}</Text>
+                      //  </Story> 
+                      // )
+                    )
+
+                  }
 
                 </ScrollView>
               </View>
@@ -158,6 +172,7 @@ export default () => {
 
             { data &&
               data.seeFeed &&
+
               data.seeFeed.map(post => <Post key={post.id} {...post} />)}
           </>
           )

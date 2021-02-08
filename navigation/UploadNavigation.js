@@ -42,17 +42,21 @@ const PhotoTabs = createMaterialTopTabNavigator(
 );
 
 export default createStackNavigator({
-    Tabs: {
+    PhotoTabs: {
         screen: PhotoTabs,
         navigationOptions: {
             title: " ",
+            headerBackTitle: " ",
+            headerTintColor: styles.blackColor,
             headerRight: <UploadLink />
         }
     },
     PUpload: {
         screen: UploadProfile,
         navigationOptions: {
-            title: " ",
+             headerBackTitle: " ",
+            headerTintColor: styles.blackColor,
+            title: " "
         }
     }
 },

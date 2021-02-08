@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import { Image, Keyboard, Text, TouchableWithoutFeedback } from "react-native";
-import styled from "styled-components";
+import styled from "styled-components/native";
 import AuthButton from "../components/AuthButton";
 import useInput from "../hooks/useInput";
 import AuthInput from "./AuthInput";
 import { gql } from 'apollo-boost';
 import { ME } from "../screens/tabs/Profile";
-import { FEED_QUERY } from "../screens/tabs/Home";
-
+import { FEED_QUERY } from "../screens/home/Home";
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -18,6 +17,7 @@ const Enter = styled.View`
 margin-top: 15px
 `;
 
+
 const EDIT_USER = gql`
     mutation editUser(
         $username:String
@@ -25,7 +25,6 @@ const EDIT_USER = gql`
          $firstName:String
         $lastName:String
         $bio:String
-        $avatar:String
     )
     {editUser(
     username : $username
@@ -33,7 +32,6 @@ const EDIT_USER = gql`
     firstName : $firstName
     lastName : $lastName
     bio : $bio
-    avatar : $avatar
     )
   }`
 
@@ -57,9 +55,9 @@ export default ({ userInfo, setUserInfo, setEditProfile, userAvatar, navigation 
             firstName: firstName.value,
             lastName: lastName.value,
             bio: bio.value,
-        }, refetchQueries: [{ query: ME, query: FEED_QUERY }]
+        },
+        refetchQueries: [{ query: ME, query: FEED_QUERY }]
     });
-
     const onSubmit = async (e) => {
         e.preventDefault();
         setLoading(true)
@@ -88,20 +86,20 @@ export default ({ userInfo, setUserInfo, setEditProfile, userAvatar, navigation 
             <View>
                 <AuthInput
                     {...username}
-                    placeholder="username"
+                    placeholder="닉네임"
                 />
                 <AuthInput
                     {...firstName}
-                    placeholder="firstName"
+                    placeholder="이름"
                 />
                 <AuthInput
                     {...lastName}
-                    placeholder="lastName"
+                    placeholder="성"
                     autoCorrect={false}
                 />
                 <AuthInput
                     {...bio}
-                    placeholder="bio"
+                    placeholder="상태 메세지"
                     autoCorrect={false}
                 />
                 <Enter />

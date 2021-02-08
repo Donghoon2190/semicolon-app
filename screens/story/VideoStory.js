@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled from "styled-components/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
-import { Ionicons } from "@expo/vector-icons";
 import * as Permissions from "expo-permissions";
-import constants from "../../Constants";
 import Loader from "../../components/Loader";
 import { TouchableOpacity, Platform, Text } from "react-native";
 import styles from "../../styles";
@@ -26,37 +24,33 @@ const Button = styled.View`
 
 export default ({ navigation }) => {
   const cameraRef = useRef();
-  const [video, setVideo] = useState(null);
+  const [uri, setUri] = useState(null);
   const [recording, setRecording] = useState(false);
   const [showCamera, setsShowCamera] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const _saveVideo = async () => {
-    const asset = await MediaLibrary.createAssetAsync(video.uri);
+  const saveVideo = async () => {
+    const asset = await MediaLibrary.createAssetAsync(uri);
     console.log(asset)
     if (asset) {
-      navigation.navigate("StoryUpload", { story: asset });
-      setVideo(null)
+      navigation.navigate("StoryUpload", { story: asset, uri });
     }
-
   };
 
-  const _StopRecord = async () => {
+  const StopRecord = async () => {
     setRecording(false)
     cameraRef.current.stopRecording();
   }
-  const _StartRecord = async () => {
-    // if (cameraRef) {
+  const StartRecord = async () => {
     setRecording(true)
-    const svideo = await cameraRef.current.recordAsync();
-    setVideo(svideo)
-    // }
+    const { uri } = await cameraRef.current.recordAsync();
+    setUri(uri)
   }
   const toogleRecord = () => {
     if (recording) {
-      _StopRecord();
+      StopRecord();
     } else {
-      _StartRecord();
+      StartRecord();
     }
   };
 
@@ -94,9 +88,9 @@ export default ({ navigation }) => {
               width: "100%"
             }}
           >
-            {video && (
+            {uri && (
               <TouchableOpacity
-                onPress={_saveVideo}
+                onPress={saveVideo}
                 style={{
                   padding: 20,
                   width: "100%",
@@ -108,6 +102,7 @@ export default ({ navigation }) => {
             )}
             <TouchableOpacity
               onPress={toogleRecord}
+
               style={{
                 padding: 20,
                 width: "100%",
@@ -119,11 +114,7 @@ export default ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </Camera>
-          {/* <View>
-            <TouchableOpacity onPress={takePhoto} disabled={!canTakePhoto}>
-              <Button />
-            </TouchableOpacity>
-          </View> */}
+
         </>
       ) : null}
     </View>
